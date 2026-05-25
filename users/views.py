@@ -12,8 +12,11 @@ class CustomUserViewSet(ModelViewSet):
 
     def get_permissions(self):
         if self.action == 'create':
-            return [AllowAny(),]
-        if self.action in ['update', 'partial_update','retrieve', 'destroy']:
-            return [IsAuthenticated(), IsProfileOwner() | IsAdminUser()]
-        return [IsAuthenticated()]
+            return [AllowAny()]
 
+        if self.action in ['update', 'partial_update', 'retrieve', 'destroy']:
+            if self.request.user and self.request.user.is_staff:
+                return [IsAuthenticated(), IsAdminUser()]
+            return [IsAuthenticated(), IsProfileOwner()]
+
+        return [IsAuthenticated()]
