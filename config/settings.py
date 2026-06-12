@@ -84,10 +84,10 @@ REST_FRAMEWORK = {
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
 }
 SPECTACULAR_SETTINGS = {
-    'TITLE': 'Habit Tracker API',
-    'DESCRIPTION': 'API для отслеживания привычек с интеграцией в Telegram',
-    'VERSION': '1.0.0',
-    'SERVE_INCLUDE_SCHEMA': False,
+    "TITLE": "Habit Tracker API",
+    "DESCRIPTION": "API для отслеживания привычек с интеграцией в Telegram",
+    "VERSION": "1.0.0",
+    "SERVE_INCLUDE_SCHEMA": False,
 }
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=15),
@@ -145,13 +145,13 @@ USE_I18N = True
 
 USE_TZ = True
 
-STATIC_URL = 'static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATIC_URL = "static/"
+STATIC_ROOT = os.path.join(BASE_DIR, "static")
 
 MEDIA_URL = "media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
 AUTH_USER_MODEL = "users.CustomUser"
 STRIPE_SECRET_KEY = os.getenv("STRIPE_SECRET_KEY")
-TELEGRAM_URL = 'https://api.telegram.org/bot'
+TELEGRAM_URL = "https://api.telegram.org/bot"
 TELEGRAM_API = os.getenv("TELEGRAM_API")

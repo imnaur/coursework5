@@ -10,14 +10,18 @@ User = get_user_model()
 
 class HabitTestCase(APITestCase):
     def setUp(self):
-        self.user = CustomUser.objects.create_user(email='german@mail.ru', password='123abc', chat_id='112858473',
-                                                   username='testing')
+        self.user = CustomUser.objects.create_user(
+            email="german@mail.ru",
+            password="123abc",
+            chat_id="112858473",
+            username="testing",
+        )
         self.client.force_authenticate(user=self.user)
         self.habit = Habit.objects.create(
             user=self.user,
-            action='Выпить стакан воды с лимоном',
-            location='Дома',
-            time='08:00:00',
+            action="Выпить стакан воды с лимоном",
+            location="Дома",
+            time="08:00:00",
             public=True,
             time_required="00:01:30",
             regularity=1,
@@ -30,19 +34,14 @@ class HabitTestCase(APITestCase):
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = response.json()
-        self.assertEqual(
-            Habit.objects.count(), 1
-        )
+        self.assertEqual(Habit.objects.count(), 1)
         self.assertEqual(data["results"][0]["action"], self.habit.action)
 
     def test_get_public_habit(self):
         """Тест получения публично опубликованных привычек"""
         url = reverse("habit_tracker:public-habits")
         response = self.client.get(url)
-        data = response.json()
-        self.assertEqual(
-            response.status_code, status.HTTP_200_OK
-        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_habit_create(self):
         """Тест создания одной привычки"""
@@ -55,7 +54,7 @@ class HabitTestCase(APITestCase):
             "public": True,
             "time_required": "00:01:30",
             "regularity": 1,
-            "is_pleasant": False
+            "is_pleasant": False,
         }
         response = self.client.post(url, data)
         if response.status_code != 201:
@@ -70,16 +69,15 @@ class HabitTestCase(APITestCase):
         data = {
             "action": "Бег по утрам",
             "location": "Стадион",
-            "time": '08:00:00',
+            "time": "08:00:00",
             "public": True,
             "time_required": "00:01:30",
             "regularity": "1",
-            "is_pleasant": False}
+            "is_pleasant": False,
+        }
 
         response = self.client.patch(url, data)
-        self.assertEqual(
-            response.status_code, status.HTTP_200_OK
-        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.json().get("action"), "Бег по утрам")
         self.assertEqual(response.json().get("location"), "Стадион")
 
@@ -87,20 +85,18 @@ class HabitTestCase(APITestCase):
         """Тест удаления одной привычки"""
         url = reverse("habit_tracker:habit-detail", args=(self.habit.pk,))
         response = self.client.delete(url)
-        self.assertEqual(
-            response.status_code, status.HTTP_204_NO_CONTENT
-        )
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertEqual(Habit.objects.count(), 0)
 
 
 class CustomUserTestCase(APITestCase):
     def setUp(self):
         self.user = User.objects.create_user(
-            email='test@mail.ru',
-            password='password123',
-            phone_number='+4915116758899',
-            chat_id='1177277449',
-            username='testing'
+            email="test@mail.ru",
+            password="password123",
+            phone_number="+4915116758899",
+            chat_id="1177277449",
+            username="testing",
         )
         self.client.force_authenticate(user=self.user)
 
@@ -108,6 +104,4 @@ class CustomUserTestCase(APITestCase):
         """Тест на получения списка пользователей"""
         url = reverse("users:users-list")
         response = self.client.get(url)
-        self.assertEqual(
-            response.status_code, status.HTTP_200_OK
-        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
