@@ -11,10 +11,10 @@ class CustomUserViewSet(ModelViewSet):
     serializer_class = CustomUserSerializer
 
     def get_permissions(self):
-        if self.action == 'create':
+        if self.action == "create":
             return [AllowAny()]
 
-        if self.action in ['update', 'partial_update', 'retrieve', 'destroy']:
+        if self.action in ["update", "partial_update", "retrieve", "destroy"]:
             if self.request.user and self.request.user.is_staff:
                 return [IsAuthenticated(), IsAdminUser()]
             return [IsAuthenticated(), IsProfileOwner()]
