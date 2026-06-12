@@ -10,7 +10,9 @@ class IsUserOrReadOnlyIfPublic(BasePermission):
             return True
         return obj.user == request.user
 
+
 class IsProfileOwner(BasePermission):
     """Отдельный permission для юзера (доступ к своим данным)"""
+
     def has_permission(self, request, view, obj):
         return obj == request.user
