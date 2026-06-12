@@ -3,8 +3,6 @@ name: CI & CD Habit Tracker
 on:
   push:
     branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
 
 jobs:
   lint:
@@ -91,7 +89,6 @@ jobs:
   deploy_to_server:
     runs-on: ubuntu-latest
     needs: run_tests
-    if: github.ref == 'refs/heads/main'
     steps:
       - name: Connection with SSH
         uses: appleboy/ssh-action@v1.0.3
