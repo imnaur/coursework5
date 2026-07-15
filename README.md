@@ -1,80 +1,92 @@
-# 🎯 Трекер полезных привычек (Habit Tracker API)
+# 🎯 Healthy Habits Tracker (Habit Tracker API)
 
-Красивый и умный бэкенд для тех, кто хочет внедрить полезные привычки в свою жизнь. 
-Проект не просто сохраняет данные, но и сам следит за расписанием, напоминая о задачах через **Telegram-бота**.
+An elegant and smart backend for anyone who wants to incorporate healthy habits into their life.
+The project doesn’t just store data—it also tracks your progress and sends task reminders via a **Telegram bot**.
 
 ---
 
-## 🚀 Как это работает (Под капотом)
+## 🚀 How It Works (Behind the Scenes)
 
-Проект использует связку из нескольких мощных инструментов:
-1. **Django REST Framework** принимает запросы, проверяет токены авторизации и фильтрует данные.
-2. **Celery Beat** — это внутренний будильник системы. Каждую минуту он просыпается и проверяет базу данных.
-3. **Celery Worker** подхватывает задачу на отправку и мгновенно пересылает сообщение в Telegram через API.
-4. **Redis** работает как невидимый курьер, который перетаскивает задачи от будильника (Beat) к исполнителю (Worker).
+The project uses a combination of several powerful tools:
+
+1. **Django REST Framework** processes requests, verifies authorization tokens, and filters data.
+2. **Celery Beat** is the system’s internal alarm clock. Every minute, it wakes up and checks the database.
+3. **Celery Worker** retrieves a task to be sent and instantly forwards the message to Telegram via the API.
+4. **Redis** acts as an invisible courier, delivering tasks from the scheduler (Beat) to the executor (Worker).
+
 ---
 
-## 💻 Локальный запуск проекта
+## 💻 Running the Project Locally
 
-Вы можете запустить проект двумя способами: классическим через Poetry или быстрым через Docker.
+You can run the project in two ways: the classic way—using Poetry—or the quick way—using Docker.
 
-### Вариант 1. Запуск через Docker (Рекомендуемый)
-Убедитесь, что у вас установлен и запущен Docker Desktop.
+### Option 1. Running via Docker (recommended)
 
-1. **Клонируйте репозиторий:**
+Make sure you have Docker Desktop installed and running.
+
+1. **Clone the repository:**
    ```bash
    git clone git@github.com:imnaur/coursework_5.git
    cd coursework_5
-2. **Создайте файл настроек .env в корне проекта и заполнить его своими данными:**
-    По примеру .env_template
-3. **Запустите контейнеры:**
-    docker compose up --build
-    Система сама скачает образы, соберет Django, Postgres, Redis и Celery. Проект будет доступен по адресу http://localhost/.
+2. **Create a .env configuration file in the project’s root directory and fill it with your information:**
+   Follow the example in the .env_template file
+3. **Start the containers:**
+   docker compose up --build
+   The system will automatically download the images and build Django, Postgres, Redis, and Celery. The project will be
+   accessible at http://localhost/.
 
+### Option 2. Running via Poetry (For Development)
 
-### Вариант 2. Запуск через Poetry (Для разработки)
-
-1. **Установите зависимости::**
+1. **Install dependencies::**
    poetry install
-2. **Примените миграции и создайте суперпользователя::**
-    poetry run python manage.py migrate
-    poetry run python manage.py createsuperuser
-3. **Запустите локальный сервер::**
-    poetry run python manage.py runserver
-(Для работы отложенных задач в этом режиме вам потребуется отдельно запустить Redis, Celery Worker и Celery Beat в параллельных терминалах).
+2. **Apply migrations and create a superuser::**
+   poetry run python manage.py migrate
+   poetry run python manage.py createsuperuser
+3. **Start the local server::**
+   poetry run python manage.py runserver
+   (For deferred tasks to work in this mode, you’ll need to run Redis, Celery Worker, and Celery Beat separately in
+   parallel terminals.)
 
+## 🛠 Setting up CI/CD and automated deployment
 
-## 🛠 Настройка CI/CD и автоматического деплоя
-В проекте настроен полноценный конвейер автоматизации (CI/CD) с помощью GitHub Actions. 
-При каждом git push в ветку main код проходит проверки и автоматически отправляется на сервер.
+The project has a fully-fledged automation pipeline (CI/CD) set up using GitHub Actions.
+Every time you git push to the main branch, the code is validated and automatically deployed to the server.
 
-## Как устроен пайплайн (.github/workflows/deploy.yml):
-**Lint (Flake8):** Проверяет стиль кода на соответствие стандартам PEP8.
+## How the pipeline works (.github/workflows/deploy.yml):
 
-**Run Tests:** Поднимает в контейнере временную базу данных PostgreSQL, накатывает миграции и гоняет Django-тесты.
+**Lint (Flake8):** Checks code style for compliance with PEP8 standards.
 
-**Deploy to Server:** В случае успеха подключается к удаленному серверу по SSH, обновляет код из Git и перезапускает Docker-контейнеры.
+**Run Tests:** Starts a temporary PostgreSQL database in a container, applies migrations, and runs Django tests.
 
-## Шаги для настройки деплоя на новый сервер:
-**Подготовка сервера (Ubuntu):**
+**Deploy to Server:** If successful, connects to the remote server via SSH, updates the code from Git, and restarts the
+Docker containers.
 
-Установите Docker и Docker Compose на целевой сервер.
+## Steps to set up deployment to a new server:
 
-Добавьте вашего пользователя в группу docker: sudo usermod -aG docker $USER.
+**Preparing the server (Ubuntu):**
 
-Склонируйте репозиторий на сервере один раз вручную в домашнюю директорию: git clone git@github.com:imnaur/coursework5.git ~/coursework5.
+Install Docker and Docker Compose on the target server.
 
-## Настройка GitHub Secrets:
-Перейдите в ваш репозиторий на GitHub: Settings -> Secrets and variables -> Actions и добавьте следующие секреты:
+Add your user to the docker group: sudo usermod -aG docker $USER.
 
-SERVER_HOST — Публичный IP-адрес вашей виртуальной машины (например, Яндекс Облака/ Amazon Cloud).
+Clone the repository to your home directory on the server once manually: git clone git@github.com:
+imnaur/coursework5.git ~/coursework5.
 
-SERVER_USER — Имя пользователя для подключения по SSH (например, ubuntu).
+## Configuring GitHub Secrets:
 
-SSH_PRIVATE_KEY — Содержимое вашего приватного SSH-ключа
+Go to your GitHub repository: Settings -> Secrets and variables -> Actions, and add the following secrets:
 
-Теперь любая публикация кода в ветку main автоматически обновит проект на удаленном сервере.
+SERVER_HOST — The public IP address of your virtual machine (e.g., Yandex Cloud/Amazon Cloud).
 
-## 🔒 Настройка безопасности и CORS
-Для того чтобы фронтенд-приложение (например, на React или Vue) могло безопасно отправлять запросы к нашему API, в проекте настроен пакет django-cors-headers. 
-Разрешенные адреса фронтенда настраиваются в файле settings.py через переменную CORS_ALLOWED_ORIGINS.
+SERVER_USER — The username for connecting via SSH (e.g., ubuntu).
+
+SSH_PRIVATE_KEY — The contents of your private SSH key
+
+Now, any code push to the main branch will automatically update the project on the remote server.
+
+## 🔒 Security and CORS Configuration
+
+To ensure that a frontend application (e.g., built with React or Vue) can safely send requests to our API, the
+django-cors-headers package is configured in the project.
+Allowed frontend origins are configured in the settings.py file via the CORS_ALLOWED_ORIGINS variable.
+

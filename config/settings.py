@@ -155,3 +155,4 @@ AUTH_USER_MODEL = "users.CustomUser"
 STRIPE_SECRET_KEY = os.getenv("STRIPE_SECRET_KEY")
 TELEGRAM_URL = "https://api.telegram.org/bot"
 TELEGRAM_API = os.getenv("TELEGRAM_API")
+
